@@ -1,5 +1,6 @@
 package com.yaxingguo.imclient.client;
 
+import com.yaxingguo.imclient.handler.ChatMsgHandler;
 import com.yaxingguo.imclient.handler.LoginResponseHandler;
 import com.yaxingguo.imcommon.codec.ProtobufDecoder;
 import com.yaxingguo.imcommon.codec.ProtobufEncoder;
@@ -34,6 +35,9 @@ public class ChatNettyClient {
     private LoginResponseHandler loginResponseHandler;
 
     private GenericFutureListener<ChannelFuture> connectedListener;
+
+    @Autowired
+    private ChatMsgHandler chatMsgHandler;
 
 
     public ChatNettyClient() {

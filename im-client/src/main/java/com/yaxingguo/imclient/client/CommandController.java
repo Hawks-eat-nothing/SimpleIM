@@ -1,5 +1,6 @@
 package com.yaxingguo.imclient.client;
 
+import com.yaxingguo.concurrent.FutureTaskScheduler;
 import com.yaxingguo.imclient.command.BaseCommand;
 import com.yaxingguo.imclient.command.LoginConsoleCommand;
 import com.yaxingguo.imclient.session.ClientSession;
@@ -63,4 +64,11 @@ public class CommandController {
             channel.closeFuture().addListener(closeFuture);
         }
     };
+
+    public void startConnectServer() {
+        FutureTaskScheduler.add(()->{
+            chatNettyClient.setConnectedListener(connectedListener);
+            chatNettyClient.doConnect();
+        });
+    }
 }
