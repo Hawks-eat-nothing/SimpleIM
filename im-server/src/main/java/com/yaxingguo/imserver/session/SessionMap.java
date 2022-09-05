@@ -66,6 +66,8 @@ public class SessionMap {
 
     /**
      * 根据用户id，获取session对象
+     * 由于一个用户可能有多个会话，因此需要调用SessionMap会话管理器的
+     * SessionMap.inst().getSessionBy(String)方法来取得这个用户的所有会话
      */
     public List<ServerSession> getSessionsBy(String userId) {
 
