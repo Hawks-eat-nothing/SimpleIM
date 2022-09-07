@@ -22,7 +22,7 @@ public class BaseConverter {
         return getOuterBuilder(seqId).buildPartial();
     }
 
-    private ProtoMsg.Message.Builder getOuterBuilder(long seqId) {
+    public ProtoMsg.Message.Builder getOuterBuilder(long seqId) {
         this.seqId = seqId;
         ProtoMsg.Message.Builder mb =
                 ProtoMsg.Message.newBuilder()

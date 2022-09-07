@@ -17,11 +17,11 @@ message ProtoMsg {
 
 
   message LoginRequest {
-    string uid = 1;
-    string deviceId = 2;
-    string token = 3;
-    uint32 platform = 4;
-    string app_version = 5;
+    string uid = 1; //用户的唯一ID
+    string deviceId = 2; //设备ID
+    string token = 3; //用户token
+    uint32 platform = 4; //客户端平台win/mac/ios/android/web...
+    string app_version = 5; //APP版本号
   }
 
   message LoginResponse {
@@ -47,12 +47,12 @@ message ProtoMsg {
 
 
   message MessageResponse {
-    bool result = 1;
-    uint32 code = 2;
-    string info = 3;
-    uint32 expose = 4;
-    bool last_block = 5;
-    fixed32 block_index = 6;
+    bool result = 1; //发送成功?true:false
+    uint32 code = 2; //错误码
+    string info = 3; //错误描述
+    uint32 expose = 4; //是否将错误展示给用户
+    bool last_block = 5; //是都最后的应答
+    fixed32 block_index = 6; //应答的序号
   }
 
 
@@ -65,13 +65,13 @@ message ProtoMsg {
 
 
   message Message {
-    HeadType type = 1;
-    uint64 sequence = 2;
-    string session_id = 3;
-    LoginRequest loginRequest = 4;
-    LoginResponse loginResponse = 5;
-    MessageRequest messageRequest = 6;
-    MessageResponse messageResponse = 7;
-    MessageNotification notification = 8;
+    HeadType type = 1; //消息类型
+    uint64 sequence = 2; //序列号
+    string session_id = 3; //会话ID
+    LoginRequest loginRequest = 4; //登录请求
+    LoginResponse loginResponse = 5; //登录响应
+    MessageRequest messageRequest = 6; //聊天请求
+    MessageResponse messageResponse = 7; //聊天响应
+    MessageNotification notification = 8; //通知消息
   }
 }

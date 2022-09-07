@@ -2,6 +2,7 @@ package com.yaxingguo.imclient.handler;
 
 import com.yaxingguo.imclient.client.CommandController;
 import com.yaxingguo.imclient.session.ClientSession;
+import com.yaxingguo.imcommon.exception.InvalidFrameException;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;

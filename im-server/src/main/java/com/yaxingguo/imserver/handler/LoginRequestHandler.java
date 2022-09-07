@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//将入站处理器收到的登录消息交给业务处理器LoginProcessor处理异步的业务逻辑
+
 @Slf4j
 @ChannelHandler.Sharable
 @Service("LoginRequestHandler")
@@ -19,35 +21,39 @@ public class LoginRequestHandler extends ChannelInboundHandlerAdapter {
     @Autowired
     LoginProcessor loginProcessor;
 
+    @Autowired
+    ChatRedirectHandler chatRedirectHandler;
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        if (null==msg||!(msg instanceof ProtoMsg.Message)){
-            super.channelRead(ctx,msg);
+        if (null == msg || !(msg instanceof ProtoMsg.Message)) {
+            super.channelRead(ctx, msg);
             return;
         }
 
         ProtoMsg.Message pkg = (ProtoMsg.Message) msg;
         //获得请求类型
         ProtoMsg.HeadType headType = pkg.getType();
-        if (!headType.equals(loginProcessor.type())){
-            super.channelRead(ctx,msg);
+        if (!headType.equals(loginProcessor.type())) {
+            super.channelRead(ctx, msg);
             return;
         }
         ServerSession session = new ServerSession(ctx.channel());
         //异步任务，处理登录的逻辑
-        CallbackTaskScheduler.add(new CallbackTask<Boolean>(){
+        CallbackTaskScheduler.add(new CallbackTask<Boolean>() {
             @Override
             public Boolean execute() throws Exception {
                 boolean r = loginProcessor.action(session, pkg);
                 return r;
             }
+
             //异步任务返回
             @Override
             public void onBack(Boolean r) {
                 if (r) {
 
-                    ctx.pipeline().addAfter("login", "chat",   chatRedirectHandler);
-                    ctx.pipeline().addAfter("login", "heartBeat",new HeartBeatServerHandler());
+                    ctx.pipeline().addAfter("login", "chat", chatRedirectHandler);
+                    ctx.pipeline().addAfter("login", "heartBeat", new HeartBeatServerHandler());
 
                     ctx.pipeline().remove("login");
                     log.info("登录成功:" + session.getUser());

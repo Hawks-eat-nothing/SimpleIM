@@ -37,7 +37,7 @@ public class ChatRedirectProcessor implements ServerProcessor{
         List<ServerSession> toSessions = SessionMap.inst().getSessionsBy(to);
         if (toSessions==null){
             //接收方离线
-            //TODO 接收方离线可以发送离线消息欸
+            // TODO 接收方离线应该可以发送离线消息哎
             Logger.tcfo("["+to+"]不在线，发送失败！");
         }else {
             toSessions.forEach((sessions)->{

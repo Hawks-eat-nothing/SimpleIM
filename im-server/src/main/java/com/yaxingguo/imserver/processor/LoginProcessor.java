@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+//处理异步业务逻辑，将处理结果写入用户绑定的子通道。
+
 @Slf4j
 @Service("LoginProcessor")
 public class LoginProcessor implements ServerProcessor{

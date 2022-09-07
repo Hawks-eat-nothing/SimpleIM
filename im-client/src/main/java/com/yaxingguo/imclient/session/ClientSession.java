@@ -28,52 +28,55 @@ public class ClientSession {
     private boolean isLogin = false;
 
     //绑定通道
-    public ClientSession(Channel channel){
+    public ClientSession(Channel channel) {
         this.channel = channel;
         this.sessionId = String.valueOf(-1);
         channel.attr(ClientSession.SESSION_KEY).set(this);
     }
+
     //登录成功后设置sessionID
-    public static void loginSuccess(ChannelHandlerContext ctx, ProtoMsg.Message pkg){
+    public static void loginSuccess(ChannelHandlerContext ctx, ProtoMsg.Message pkg) {
         Channel channel = ctx.channel();
         ClientSession session = channel.attr(ClientSession.SESSION_KEY).get();
         session.setSessionId(pkg.getSessionId());
-       session.setLogin(true);
+        session.setLogin(true);
         log.info("登录成功");
     }
+
     //获取通道
-    public static ClientSession getSession(ChannelHandlerContext ctx){
+    public static ClientSession getSession(ChannelHandlerContext ctx) {
         Channel channel = ctx.channel();
         ClientSession session = channel.attr(ClientSession.SESSION_KEY).get();
         return session;
     }
 
-    public String getRemoteAddress(){
+    public String getRemoteAddress() {
         return channel.remoteAddress().toString();
     }
 
     //把protobuf数据包写入通道
-    public ChannelFuture writeAndFlush(Object pkg){
+    public ChannelFuture writeAndFlush(Object pkg) {
         ChannelFuture fu = channel.writeAndFlush(pkg);
         return fu;
 
     }
-    public void writeAndClose(Object pkg){
+
+    public void writeAndClose(Object pkg) {
         ChannelFuture fu = channel.writeAndFlush(pkg);
         fu.addListener(ChannelFutureListener.CLOSE);
     }
+
     //关闭通道
-    public void close(){
+    public void close() {
         isConnected = false;
         ChannelFuture future = channel.close();
         future.addListener(new ChannelFutureListener() {
             @Override
             public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                if (channelFuture.isSuccess()){
+                if (channelFuture.isSuccess()) {
                     log.info("顺利断开连接");
                 }
             }
         });
     }
-
 }

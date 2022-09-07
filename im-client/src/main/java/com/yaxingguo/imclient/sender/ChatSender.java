@@ -1,5 +1,6 @@
 package com.yaxingguo.imclient.sender;
 
+import com.yaxingguo.imclient.protoConverter.ChatMsgConverter;
 import com.yaxingguo.imcommon.bean.ChatMsg;
 import com.yaxingguo.imcommon.bean.Msg.ProtoMsg;
 import lombok.extern.slf4j.Slf4j;

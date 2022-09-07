@@ -1,6 +1,7 @@
 package com.yaxingguo.imclient.client;
 
 import com.yaxingguo.imclient.handler.ChatMsgHandler;
+import com.yaxingguo.imclient.handler.ExceptionHandler;
 import com.yaxingguo.imclient.handler.LoginResponseHandler;
 import com.yaxingguo.imcommon.codec.ProtobufDecoder;
 import com.yaxingguo.imcommon.codec.ProtobufEncoder;

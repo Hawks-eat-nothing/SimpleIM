@@ -26,7 +26,11 @@ import java.util.concurrent.TimeUnit;
 public class CommandController {
 
     /**
-     * CommandController在完成聊天内容和目标用户信息的收集后，在自己的startOneChat()方法中调用chatSender发送器示例，
+     * 负责收集用户在控制台输入的命令类型，根据相应的类型调用相应的命令处理器
+     * 和收集相应的信息
+     *
+     * CommandController在完成聊天内容和目标用户信息的收集后，
+     * 在自己的startOneChat()方法中调用chatSender发送器示例，
      * 将聊天消息组装成Protobuf数据包，通过客户端的通道发往服务器端
      */
     @Autowired
@@ -91,46 +95,48 @@ public class CommandController {
     };
 
     public void startConnectServer() {
-        FutureTaskScheduler.add(()->{
+        FutureTaskScheduler.add(() -> {
             chatNettyClient.setConnectedListener(connectedListener);
             chatNettyClient.doConnect();
         });
     }
 
-    public void commandThreadRunning(){
+    public void commandThreadRunning() {
         Thread.currentThread().setName("命令线程");
-        while (true){
+        while (true) {
             //建立连接
-            while (connectFlag==false){
+            while (connectFlag == false) {
                 //开始连接
                 startConnectServer();
                 waitCommandThread();
             }
             //处理命令
-            while (null!=session){
+            while (null != session) {
                 Scanner scanner = new Scanner(System.in);
                 clientCommandMenu.exec(scanner);
                 String key = clientCommandMenu.getCommandInput();
                 BaseCommand command = commandMap.get(key);
 
-                if (null==command){
-                    System.err.println("无法识别["+command+"]指令，请重新输入~");
+                if (null == command) {
+                    System.err.println("无法识别[" + command + "]指令，请重新输入~");
                     continue;
                 }
 
-                switch (key){
+                switch (key) {
                     case ChatConsoleCommand.KEY:
                         command.exec(scanner);
-                        startOneChat((ChatConsoleCommand)command);
+                        startOneChat((ChatConsoleCommand) command);
                         break;
                     case LoginConsoleCommand.KEY:
                         command.exec(scanner);
-                        startLogin((LoginConsoleCommand)command);
+                        startLogin((LoginConsoleCommand) command);
                         break;
                     case LogoutConsoleCommand.KEY:
                         command.exec(scanner);
                         startLogout(command);
                         break;
+                    default:
+                        continue;
                 }
 
             }
@@ -138,9 +144,9 @@ public class CommandController {
 
     }
 
-    private void startOneChat(ChatConsoleCommand c){
+    private void startOneChat(ChatConsoleCommand c) {
         //登录
-        if (!isLogin()){
+        if (!isLogin()) {
             log.info("还没有登录，请先登录");
             return;
         }
@@ -149,9 +155,9 @@ public class CommandController {
         chatSender.sendChatMsg(c.getToUserId(), c.getMessage());
     }
 
-    private void startLogin(LoginConsoleCommand command){
+    private void startLogin(LoginConsoleCommand command) {
         //登录
-        if (!isConnectFlag()){
+        if (!isConnectFlag()) {
             log.info("连接异常，请重新连接");
             return;
         }
@@ -166,9 +172,9 @@ public class CommandController {
         loginSender.sendLoginMsg();
     }
 
-    private void startLogout(BaseCommand command){
+    private void startLogout(BaseCommand command) {
         //登出
-        if (!isLogin()){
+        if (!isLogin()) {
             log.info("还没登录，请先登录");
             return;
         }
@@ -182,8 +188,9 @@ public class CommandController {
             e.printStackTrace();
         }
     }
-    public boolean isLogin(){
-        if (null==session){
+
+    public boolean isLogin() {
+        if (null == session) {
             log.info("session is null");
             return false;
         }
